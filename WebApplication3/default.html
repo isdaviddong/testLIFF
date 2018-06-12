@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>test LIFF</title>
+    <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <script>
+        //init LIFF
+        function initializeApp(data) {
+            //取得QueryString
+            let urlParams = new URLSearchParams(window.location.search);
+            //顯示QueryString
+            $('#QueryString').val(urlParams.toString());
+            //顯示UserId
+            $('#userid').val(data.context.userId);
+        }
+
+        //ready
+        $(function () {
+            //init LIFF
+            liff.init(function (data) {
+                initializeApp(data);
+            });
+
+            //ButtonGetProfile
+            $('#ButtonGetProfile').click(function () {
+                //取得User Proile
+                liff.getProfile().then(
+                    profile=> {
+                        //顯示在text box中
+                        $('#UserInfo').val(profile.displayName);
+                        //居然可以alert
+                        alert('done');
+                    }
+                );
+            });
+
+            //ButtonSendMsg
+            $('#ButtonSendMsg').click(function () {
+                liff.sendMessages([
+                 {
+                     type: 'text',
+                     text: $('#msg').val()
+                 }
+                ])
+               .then(() => {
+                   alert('done');
+               })
+            });
+        });
+    </script>
+</head>
+<body>
+        <div class="row">
+            <div class="col-md-6">
+                <label>user id:</label>
+                <input class="form-control" type="text" id="userid" />   <br />
+                <label>QueryString:</label>
+                <input class="form-control" type="text" id="QueryString" /><br />
+                <button class="btn btn-primary" id="ButtonGetProfile">Get Profile</button>
+                <input class="form-control" type="text" id="UserInfo" /><br />
+                <label>要傳送的訊息:</label>
+                <input class="form-control" type="text" id="msg" value="測試" /><br />
+                <button class="btn btn-primary" id="ButtonSendMsg"  >要傳送的訊息</button>
+            </div>
+        </div>
+</body>
+</html>
